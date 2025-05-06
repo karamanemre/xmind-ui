@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import {
   AppBar,
   Box,
@@ -19,10 +20,12 @@ import {
   Settings as SettingsIcon
 } from '@mui/icons-material';
 import { logout } from '@/store/slices/authSlice';
+import LanguageSelector from "@/components/common/LanguageSelector";
 
 const Navbar = ({ onSidebarToggle }) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -72,14 +75,15 @@ const Navbar = ({ onSidebarToggle }) => {
           <span style={{ color: '#1877F2' }}>x</span>
           <span style={{ color: '#1877F2', fontWeight: 'bold' }}>MIND</span>
         </Typography>
-        <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <LanguageSelector />
           <IconButton
             size="large"
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleMenu}
-            sx={{ color: '#666' }}
+            sx={{ color: '#666', ml: 1 }}
           >
             <Avatar 
               sx={{ 
@@ -120,14 +124,14 @@ const Navbar = ({ onSidebarToggle }) => {
               <ListItemIcon>
                 <SettingsIcon fontSize="small" sx={{ color: '#666' }} />
               </ListItemIcon>
-              Ayarlar
+              {t('common.settings')}
             </MenuItem>
             <Divider />
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <LogoutIcon fontSize="small" sx={{ color: '#FF5777' }} />
               </ListItemIcon>
-              Çıkış Yap
+              {t('common.logout')}
             </MenuItem>
           </Menu>
         </Box>

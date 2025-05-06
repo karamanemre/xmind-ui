@@ -9,69 +9,73 @@ import {
     CheckCircle
 } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
-export const getColumns = (handleDemandAnswer, handleStatusChange) => [
+export const getColumns = (handleDemandAnswer, handleStatusChange) => {
+    const { t } = useTranslation();
+    
+    return [
     {
         field: 'requesterMail',
-        headerName: 'Talep Eden',
+        headerName: t('demandAnswer.requester'),
         flex: 1,
         sortable: true,
         renderHeader: () => (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Email sx={{ fontSize: 20, color: '#FF5777' }} />
-                <span>Talep Eden</span>
+                <span>{t('demandAnswer.requester')}</span>
             </div>
         ),
     },
     {
         field: 'createdDate',
-        headerName: 'Talep Tarihi',
+        headerName: t('demandAnswer.requestDate'),
         flex: 1,
         sortable: true,
         renderHeader: () => (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <CalendarToday sx={{ fontSize: 20, color: '#00C853' }} />
-                <span>Talep Tarihi</span>
+                <span>{t('demandAnswer.requestDate')}</span>
             </div>
         ),
     },
     {
         field: 'title',
-        headerName: 'Talep Konusu',
+        headerName: t('demandAnswer.requestSubject'),
         flex: 1,
         sortable: true,
         renderHeader: () => (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Title sx={{ fontSize: 20, color: '#1877F2' }} />
-                <span>Talep Konusu</span>
+                <span>{t('demandAnswer.requestSubject')}</span>
             </div>
         ),
     },
     {
         field: 'description',
-        headerName: 'Talep Açıklaması',
+        headerName: t('demandAnswer.requestDescription'),
         flex: 2,
         sortable: false,
         renderHeader: () => (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Description sx={{ fontSize: 20, color: '#AA00FF' }} />
-                <span>Talep Açıklaması</span>
+                <span>{t('demandAnswer.requestDescription')}</span>
             </div>
         ),
     },
     {
         field: 'status',
-        headerName: 'Durum',
+        headerName: t('demandAnswer.status'),
         flex: 1,
         sortable: true,
         renderHeader: () => (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <RadioButtonChecked sx={{ fontSize: 20, color: '#FF9100' }} />
-                <span>Durum</span>
+                <span>{t('demandAnswer.status')}</span>
             </div>
         ),
         renderCell: (params) => (
-            <span className={`status-${params.value.toLowerCase()}`}
+            <span
                 style={{
                     padding: '4px 12px',
                     borderRadius: '12px',
@@ -79,24 +83,24 @@ export const getColumns = (handleDemandAnswer, handleStatusChange) => [
                     color: params.value === 'OPEN' ? '#1877F2' : '#666',
                     fontSize: '0.875rem'
                 }}>
-                {params.value === 'OPEN' ? 'Beklemede' : params.value}
+                {params.value === 'OPEN' ? t('demandAnswer.pending') : t(`demandAnswer.${params.value.toLowerCase()}`)}
             </span>
         ),
     },
     {
         field: 'actions',
-        headerName: 'Aksiyonlar',
+        headerName: t('demandAnswer.actions'),
         flex: 1,
         sortable: false,
         renderHeader: () => (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Settings sx={{ fontSize: 20, color: '#2196F3' }} />
-                <span>Aksiyonlar</span>
+                <span>{t('demandAnswer.actions')}</span>
             </div>
         ),
         renderCell: (params) => (
             <div style={{ display: 'flex', gap: '8px' }}>
-                <Tooltip title={params.row.status === 'OPEN' ? 'Cevapla' : 'Bu talep yanıtlandı'}>
+                <Tooltip title={params.row.status === 'OPEN' ? t('demandAnswer.reply') : t('demandAnswer.requestAnswered')}>
                     <span>
                         <IconButton
                             onClick={(e) => {
@@ -117,7 +121,7 @@ export const getColumns = (handleDemandAnswer, handleStatusChange) => [
                         </IconButton>
                     </span>
                 </Tooltip>
-                <Tooltip title="Durumu Kapat">
+                <Tooltip title={t('demandAnswer.closeStatus')}>
                     <span>
                         <IconButton
                             onClick={(e) => {
@@ -139,4 +143,4 @@ export const getColumns = (handleDemandAnswer, handleStatusChange) => [
             </div>
         ),
     }
-]; 
+]}; 

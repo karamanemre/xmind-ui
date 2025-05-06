@@ -3,6 +3,8 @@ import { Provider } from 'react-redux';
 import { store } from '@/store';
 import Layout from '@/components/layout/Layout';
 import { useRouter } from 'next/router';
+import AuthGuard from '@/components/auth/AuthGuard';
+import '@/i18n';
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -10,13 +12,15 @@ export default function App({ Component, pageProps }) {
 
   return (
     <Provider store={store}>
-      {isAuthPage ? (
-        <Component {...pageProps} />
-      ) : (
-        <Layout>
+      <AuthGuard>
+        {isAuthPage ? (
           <Component {...pageProps} />
-        </Layout>
-      )}
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
+      </AuthGuard>
     </Provider>
   );
 }

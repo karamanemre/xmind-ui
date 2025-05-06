@@ -5,24 +5,27 @@ import { CustomTextField } from '../common/CustomInput';
 import CustomButton from '../common/CustomButton';
 import CustomModal from '../common/CustomModal';
 import CustomDropdown from '../common/CustomDropdown';
-
-const demandSchema = Yup.object().shape({
-  title: Yup.string()
-    .required('Başlık zorunludur')
-    .min(3, 'Başlık en az 3 karakter olmalıdır'),
-  description: Yup.string()
-    .required('Açıklama zorunludur')
-    .min(10, 'Açıklama en az 10 karakter olmalıdır'),
-  categoryId: Yup.string()
-    .required('Kategori seçimi zorunludur')
-});
+import { useTranslation } from 'react-i18next';
 
 const CreateDemandForm = ({ open, onClose, onSubmit, categories }) => {
+  const { t } = useTranslation();
+
+  const demandSchema = Yup.object().shape({
+    title: Yup.string()
+      .required(t('validation.required', { field: t('demand.title') }))
+      .min(3, t('validation.minLength', { field: t('demand.title'), min: 3 })),
+    description: Yup.string()
+      .required(t('validation.required', { field: t('demand.description') }))
+      .min(10, t('validation.minLength', { field: t('demand.description'), min: 10 })),
+    categoryId: Yup.string()
+      .required(t('validation.required', { field: t('common.category') }))
+  });
+
   return (
     <CustomModal
       open={open}
       onClose={onClose}
-      title="Yeni Talep"
+      title={t('demand.newDemand')}
     >
       <Formik
         initialValues={{
@@ -40,7 +43,7 @@ const CreateDemandForm = ({ open, onClose, onSubmit, categories }) => {
                 required
                 fullWidth
                 name="title"
-                label="Başlık"
+                label={t('demand.title')}
                 value={values.title}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -51,7 +54,7 @@ const CreateDemandForm = ({ open, onClose, onSubmit, categories }) => {
                 required
                 fullWidth
                 name="description"
-                label="Açıklama"
+                label={t('demand.description')}
                 multiline
                 rows={4}
                 value={values.description}
@@ -63,7 +66,7 @@ const CreateDemandForm = ({ open, onClose, onSubmit, categories }) => {
               <CustomDropdown
                 required
                 name="categoryId"
-                label="Kategori"
+                label={t('common.category')}
                 value={values.categoryId}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -79,7 +82,7 @@ const CreateDemandForm = ({ open, onClose, onSubmit, categories }) => {
                   variant="outlined" 
                   onClick={onClose}
                 >
-                  İptal
+                  {t('common.cancel')}
                 </CustomButton>
                 <CustomButton 
                   type="submit"
@@ -93,7 +96,7 @@ const CreateDemandForm = ({ open, onClose, onSubmit, categories }) => {
                     }
                   }}
                 >
-                  Oluştur
+                  {t('common.create')}
                 </CustomButton>
               </Box>
             </Box>

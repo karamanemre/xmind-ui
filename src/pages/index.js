@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { Box } from "@mui/material";
-import AuthForm from "@/components/auth/AuthForm";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +24,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <Box>
-          <AuthForm/>
+
       </Box>
     </>
   );

@@ -2,6 +2,7 @@
 
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 import {
     Alert,
     Box,
@@ -23,6 +24,7 @@ import {ADMIN_ROLE, USER_ROLE} from "@/utils/constants";
 function LoginForm({onSwitchMode}) {
     const router = useRouter();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
     const {loading, error} = useSelector((state) => state.auth);
 
     const [formData, setFormData] = useState({
@@ -95,7 +97,7 @@ function LoginForm({onSwitchMode}) {
                         zIndex: 1
                     }}
                 >
-                    Kullanıcı adı
+                    {t('auth.username')}
                 </Typography>
                 <TextField
                     required
@@ -106,7 +108,7 @@ function LoginForm({onSwitchMode}) {
                     value={formData.email}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Kullanıcı adı"
+                    placeholder={t('auth.username')}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -148,7 +150,7 @@ function LoginForm({onSwitchMode}) {
                         zIndex: 1
                     }}
                 >
-                    Şifre
+                    {t('auth.password')}
                 </Typography>
                 <TextField
                     required
@@ -160,7 +162,7 @@ function LoginForm({onSwitchMode}) {
                     value={formData.password}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Şifre"
+                    placeholder={t('auth.password')}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -199,43 +201,39 @@ function LoginForm({onSwitchMode}) {
                 />
             </Box>
 
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-            }}>
+            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <FormControlLabel
                     control={
                         <Checkbox
                             checked={rememberMe}
                             onChange={(e) => setRememberMe(e.target.checked)}
                             sx={{
-                                color: '#1877F2',
+                                color: '#666',
                                 '&.Mui-checked': {
                                     color: '#1877F2',
-                                }
+                                },
                             }}
                         />
                     }
-                    label={
-                        <Typography sx={{fontSize: '0.875rem', color: '#666'}}>
-                            Beni Hatırla
-                        </Typography>
-                    }
+                    label={t('auth.rememberMe')}
+                    sx={{'& .MuiFormControlLabel-label': {fontSize: '0.875rem', color: '#666'}}}
                 />
                 <Link
-                    href="#"
-                    underline="hover"
+                    component="button"
+                    variant="body2"
+                    onClick={() => {
+                        // handle forgot password
+                    }}
                     sx={{
-                        color: '#666',
-                        fontSize: '0.875rem',
+                        color: '#1877F2',
                         textDecoration: 'none',
+                        fontSize: '0.875rem',
                         '&:hover': {
-                            color: '#1877F2'
-                        }
+                            textDecoration: 'underline',
+                        },
                     }}
                 >
-                    Şifremi Unuttum
+                    {t('auth.forgotPassword')}
                 </Link>
             </Box>
 
@@ -245,52 +243,38 @@ function LoginForm({onSwitchMode}) {
                 variant="contained"
                 disabled={loading}
                 sx={{
-                    mt: 1,
-                    height: '36px',
-                    minHeight: '36px',
+                    mt: 2,
                     bgcolor: '#1877F2',
-                    borderRadius: 1.5,
+                    '&:hover': {
+                        bgcolor: '#1464D8',
+                    },
+                    height: '48px',
+                    borderRadius: '8px',
                     textTransform: 'none',
                     fontSize: '1rem',
-                    '&:hover': {
-                        bgcolor: '#1664D9'
-                    }
                 }}
             >
-                {loading ? (
-                    <CircularProgress size={20} color="inherit"/>
-                ) : (
-                    'GİRİŞ'
-                )}
+                {loading ? <CircularProgress size={24} sx={{color: '#fff'}}/> : t('auth.login')}
             </Button>
 
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 1,
-                mt: 2
-            }}>
-                <Typography sx={{fontSize: '0.875rem', color: '#666'}}>
-                    Hesabınız yok mu?
+            <Box sx={{textAlign: 'center', mt: 2}}>
+                <Typography variant="body2" sx={{color: '#666'}}>
+                    {t('auth.noAccount')}{' '}
+                    <Link
+                        component="button"
+                        variant="body2"
+                        onClick={onSwitchMode}
+                        sx={{
+                            color: '#1877F2',
+                            textDecoration: 'none',
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            },
+                        }}
+                    >
+                        {t('auth.register')}
+                    </Link>
                 </Typography>
-                <Button
-                    onClick={onSwitchMode}
-                    sx={{
-                        color: '#1877F2',
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
-                        textTransform: 'none',
-                        minWidth: 'auto',
-                        p: 0,
-                        '&:hover': {
-                            background: 'none',
-                            color: '#1664D9'
-                        }
-                    }}
-                >
-                    Kayıt Ol
-                </Button>
             </Box>
         </Box>
     );

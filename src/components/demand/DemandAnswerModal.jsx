@@ -1,6 +1,7 @@
 import CustomModal from '../common/CustomModal';
 import CustomButton from '../common/CustomButton';
 import { CustomTextField } from '../common/CustomInput';
+import { useTranslation } from 'react-i18next';
 
 const DemandAnswerModal = ({ 
     visible, 
@@ -11,11 +12,13 @@ const DemandAnswerModal = ({
     setAnswer, 
     loading 
 }) => {
+    const { t } = useTranslation();
+
     return (
         <CustomModal
             open={visible}
             onClose={onCancel}
-            title="Talebi Cevapla"
+            title={t('demand.answerDemand')}
         >
             <div className="demand-details" style={{
                 backgroundColor: '#F5F8FF',
@@ -24,15 +27,15 @@ const DemandAnswerModal = ({
                 marginBottom: '16px'
             }}>
                 <div className="detail-item" style={{ marginBottom: '8px' }}>
-                    <span className="label" style={{ fontWeight: 500, color: '#666' }}>Talep Eden:</span>
+                    <span className="label" style={{ fontWeight: 500, color: '#666' }}>{t('demand.requester')}:</span>
                     <span className="value" style={{ marginLeft: '8px' }}>{selectedDemand?.requesterMail}</span>
                 </div>
                 <div className="detail-item" style={{ marginBottom: '8px' }}>
-                    <span className="label" style={{ fontWeight: 500, color: '#666' }}>Konu:</span>
+                    <span className="label" style={{ fontWeight: 500, color: '#666' }}>{t('demand.title')}:</span>
                     <span className="value" style={{ marginLeft: '8px' }}>{selectedDemand?.title}</span>
                 </div>
                 <div className="detail-item">
-                    <span className="label" style={{ fontWeight: 500, color: '#666' }}>Açıklama:</span>
+                    <span className="label" style={{ fontWeight: 500, color: '#666' }}>{t('demand.description')}:</span>
                     <span className="value" style={{ marginLeft: '8px' }}>{selectedDemand?.description}</span>
                 </div>
             </div>
@@ -42,7 +45,7 @@ const DemandAnswerModal = ({
                 minRows={4}
                 maxRows={8}
                 fullWidth
-                placeholder="Cevabınızı yazın..."
+                placeholder={t('demand.writeAnswer')}
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 sx={{

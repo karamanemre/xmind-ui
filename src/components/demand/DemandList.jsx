@@ -1,5 +1,6 @@
 import {Box, Card, CardContent, Chip, Grid, Typography} from '@mui/material';
 import {formatShortDate} from '@/utils/dateUtils';
+import {useTranslation} from 'react-i18next';
 
 const statusColors = {
     OPEN: 'warning',
@@ -8,6 +9,8 @@ const statusColors = {
 };
 
 const DemandList = ({demands, categories, statuses, onDemandClick}) => {
+    const {t} = useTranslation();
+
     return (
         <Grid container spacing={3}>
             {demands.map((demand) => (
@@ -31,7 +34,7 @@ const DemandList = ({demands, categories, statuses, onDemandClick}) => {
                                 <Typography variant="h6">{demand.title}</Typography>
                                 <Chip
                                     sx={{borderRadius: '25px', height: '15px', width: '60px', padding: '2px'}}
-                                    label={statuses.find(s => s.key === demand.status)?.desc}
+                                    label={t(`demand.status${demand.status}`)}
                                     color={statusColors[demand.status]}
                                     size="small"
                                 />
@@ -41,7 +44,7 @@ const DemandList = ({demands, categories, statuses, onDemandClick}) => {
                             </Typography>
                             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                 <Typography variant="caption" color="text.secondary">
-                                    Kategori: {categories.find(c => c.key === demand.category)?.desc}
+                                    {t('demand.category')}: {categories.find(c => c.key === demand.category)?.desc}
                                 </Typography>
                                 <Typography variant="caption" color="text.secondary">
                                     {formatShortDate(demand.createdDate)}

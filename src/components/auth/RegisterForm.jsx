@@ -2,7 +2,8 @@
 
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Alert, Box, Button, CircularProgress, IconButton, InputAdornment, TextField, Typography,} from '@mui/material';
+import {useTranslation} from 'react-i18next';
+import {Alert, Box, Button, CircularProgress, IconButton, InputAdornment, TextField, Typography, Link} from '@mui/material';
 import {Email, Lock, Person, Visibility, VisibilityOff} from '@mui/icons-material';
 import {register} from '@/store/slices/authSlice';
 import {useRouter} from 'next/navigation';
@@ -11,6 +12,7 @@ import {ADMIN_ROLE, USER_ROLE} from "@/utils/constants";
 function RegisterForm({onSwitchMode}) {
     const router = useRouter();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
     const {loading, error} = useSelector((state) => state.auth);
 
     const [formData, setFormData] = useState({
@@ -32,7 +34,7 @@ function RegisterForm({onSwitchMode}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-            dispatch({type: 'auth/setError', payload: 'Şifreler eşleşmiyor'});
+            dispatch({type: 'auth/setError', payload: t('validation.passwordMatch')});
             return;
         }
 
@@ -49,7 +51,6 @@ function RegisterForm({onSwitchMode}) {
                 router.push('/demand-answer');
             }
         } catch (error) {
-
         }
     };
 
@@ -96,7 +97,7 @@ function RegisterForm({onSwitchMode}) {
                         zIndex: 1
                     }}
                 >
-                    Kullanıcı adı
+                    {t('auth.username')}
                 </Typography>
                 <TextField
                     required
@@ -105,7 +106,7 @@ function RegisterForm({onSwitchMode}) {
                     value={formData.username}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Kullanıcı adı"
+                    placeholder={t('auth.username')}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -147,7 +148,7 @@ function RegisterForm({onSwitchMode}) {
                         zIndex: 1
                     }}
                 >
-                    E-posta
+                    {t('auth.email')}
                 </Typography>
                 <TextField
                     required
@@ -157,7 +158,7 @@ function RegisterForm({onSwitchMode}) {
                     value={formData.email}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="E-posta"
+                    placeholder={t('auth.email')}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -199,7 +200,7 @@ function RegisterForm({onSwitchMode}) {
                         zIndex: 1
                     }}
                 >
-                    Şifre
+                    {t('auth.password')}
                 </Typography>
                 <TextField
                     required
@@ -209,7 +210,7 @@ function RegisterForm({onSwitchMode}) {
                     value={formData.password}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Şifre"
+                    placeholder={t('auth.password')}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -262,7 +263,7 @@ function RegisterForm({onSwitchMode}) {
                         zIndex: 1
                     }}
                 >
-                    Şifre Tekrar
+                    {t('auth.confirmPassword')}
                 </Typography>
                 <TextField
                     required
@@ -272,7 +273,7 @@ function RegisterForm({onSwitchMode}) {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Şifre Tekrar"
+                    placeholder={t('auth.confirmPassword')}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -317,52 +318,38 @@ function RegisterForm({onSwitchMode}) {
                 variant="contained"
                 disabled={loading}
                 sx={{
-                    mt: 1,
-                    height: '36px',
-                    minHeight: '36px',
+                    mt: 2,
                     bgcolor: '#1877F2',
-                    borderRadius: 1.5,
+                    '&:hover': {
+                        bgcolor: '#1464D8',
+                    },
+                    height: '48px',
+                    borderRadius: '8px',
                     textTransform: 'none',
                     fontSize: '1rem',
-                    '&:hover': {
-                        bgcolor: '#1664D9'
-                    }
                 }}
             >
-                {loading ? (
-                    <CircularProgress size={20} color="inherit"/>
-                ) : (
-                    'KAYIT OL'
-                )}
+                {loading ? <CircularProgress size={24} sx={{color: '#fff'}}/> : t('auth.register')}
             </Button>
 
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 1,
-                mt: 2
-            }}>
-                <Typography sx={{fontSize: '0.875rem', color: '#666'}}>
-                    Zaten hesabınız var mı?
+            <Box sx={{textAlign: 'center', mt: 2}}>
+                <Typography variant="body2" sx={{color: '#666'}}>
+                    {t('auth.haveAccount')}{' '}
+                    <Link
+                        component="button"
+                        variant="body2"
+                        onClick={onSwitchMode}
+                        sx={{
+                            color: '#1877F2',
+                            textDecoration: 'none',
+                            '&:hover': {
+                                textDecoration: 'underline',
+                            },
+                        }}
+                    >
+                        {t('auth.login')}
+                    </Link>
                 </Typography>
-                <Button
-                    onClick={onSwitchMode}
-                    sx={{
-                        color: '#1877F2',
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
-                        textTransform: 'none',
-                        minWidth: 'auto',
-                        p: 0,
-                        '&:hover': {
-                            background: 'none',
-                            color: '#1664D9'
-                        }
-                    }}
-                >
-                    Giriş Yap
-                </Button>
             </Box>
         </Box>
     );
