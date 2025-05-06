@@ -4,16 +4,16 @@ import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useRouter} from 'next/navigation';
 import {Alert, Box, CircularProgress, Container, IconButton} from '@mui/material';
-import {Add as AddIcon, Refresh as RefreshIcon, Search as SearchIcon} from '@mui/icons-material';
-import {createDemand, fetchDemands, fetchStatuses, setFilters} from '@/store/slices/demandSlice';
+import {Add as AddIcon, Refresh as RefreshIcon} from '@mui/icons-material';
+import {createDemand, fetchDemands, fetchStatuses, setFilters, searchDemands} from '@/store/slices/demandSlice';
 import {fetchCategories} from '@/store/slices/categorySlice';
 import CustomButton from '@/components/common/CustomButton';
 import CustomTitle from '@/components/common/CustomTitle';
-import {CustomTextField} from '@/components/common/CustomInput';
 import CustomDropdown from '@/components/common/CustomDropdown';
 import CreateDemandForm from '@/components/demand/CreateDemandForm';
 import DemandDetailModal from '@/components/demand/DemandDetailModal';
 import DemandList from '@/components/demand/DemandList';
+import SearchBar from '@/components/common/SearchBar';
 import {USER_ROLE} from "@/utils/constants";
 
 export default function DemandPage() {
@@ -56,7 +56,15 @@ export default function DemandPage() {
     };
 
     const handleFilterChange = (field, value) => {
-        dispatch(setFilters({[field]: value}));
+        if (field === 'title') {
+            if (value) {
+                dispatch(searchDemands(value));
+            } else {
+                dispatch(fetchDemands(filters));
+            }
+        } else {
+            dispatch(setFilters({[field]: value}));
+        }
     };
 
     return (
@@ -77,14 +85,9 @@ export default function DemandPage() {
             {error && <Alert severity="error" sx={{mb: 2}}>{error}</Alert>}
 
             <Box sx={{mb: 4, display: 'flex', gap: 2}}>
-                <CustomTextField
+                <SearchBar
                     placeholder="Taleplerde ara..."
-                    value={filters.search}
-                    onChange={(e) => handleFilterChange('search', e.target.value)}
-                    InputProps={{
-                        startAdornment: <SearchIcon sx={{color: 'action.active', mr: 1}}/>
-                    }}
-                    sx={{flex: 1}}
+                    onChange={handleFilterChange.bind(null, 'title')}
                 />
                 <Box sx={{minWidth: 200}}>
                     <CustomDropdown
@@ -100,9 +103,6 @@ export default function DemandPage() {
                         ]}
                     />
                 </Box>
-                <IconButton onClick={() => dispatch(fetchDemands(filters))}>
-                    <RefreshIcon/>
-                </IconButton>
             </Box>
 
             {loading ? (

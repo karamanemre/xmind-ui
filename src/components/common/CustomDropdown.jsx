@@ -33,7 +33,7 @@ const CustomDropdown = ({
         onBlur={onBlur}
         label={label}
         sx={{
-          height: '50px',
+          height: '40px',
           '& .MuiSelect-select': {
             height: '50px !important',
             display: 'flex',

@@ -5,11 +5,12 @@ import {
     Description,
     RadioButtonChecked,
     Reply,
-    Settings
+    Settings,
+    CheckCircle
 } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 
-export const getColumns = (handleDemandAnswer) => [
+export const getColumns = (handleDemandAnswer, handleStatusChange) => [
     {
         field: 'requesterMail',
         headerName: 'Talep Eden',
@@ -94,27 +95,48 @@ export const getColumns = (handleDemandAnswer) => [
             </div>
         ),
         renderCell: (params) => (
-            <Tooltip title={params.row.status === 'OPEN' ? 'Cevapla' : 'Bu talep yanıtlandı'}>
-                <span>
-                    <IconButton
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            if (params.row.status === 'OPEN') {
-                                handleDemandAnswer(params.row);
-                            }
-                        }}
-                        disabled={params.row.status !== 'OPEN'}
-                        sx={{
-                            color: params.row.status === 'OPEN' ? '#1877F2' : '#E5E7EB',
-                            '&:hover': {
-                                bgcolor: params.row.status === 'OPEN' ? 'rgba(24, 119, 242, 0.04)' : 'transparent',
-                            }
-                        }}
-                    >
-                        <Reply />
-                    </IconButton>
-                </span>
-            </Tooltip>
+            <div style={{ display: 'flex', gap: '8px' }}>
+                <Tooltip title={params.row.status === 'OPEN' ? 'Cevapla' : 'Bu talep yanıtlandı'}>
+                    <span>
+                        <IconButton
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (params.row.status === 'OPEN') {
+                                    handleDemandAnswer(params.row);
+                                }
+                            }}
+                            disabled={params.row.status !== 'OPEN'}
+                            sx={{
+                                color: params.row.status === 'OPEN' ? '#1877F2' : '#E5E7EB',
+                                '&:hover': {
+                                    bgcolor: params.row.status === 'OPEN' ? 'rgba(24, 119, 242, 0.04)' : 'transparent',
+                                }
+                            }}
+                        >
+                            <Reply />
+                        </IconButton>
+                    </span>
+                </Tooltip>
+                <Tooltip title="Durumu Kapat">
+                    <span>
+                        <IconButton
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleStatusChange(params.row.id);
+                            }}
+                            disabled={params.row.status === 'CLOSED'}
+                            sx={{
+                                color: params.row.status !== 'CLOSED' ? '#00C853' : '#E5E7EB',
+                                '&:hover': {
+                                    bgcolor: params.row.status !== 'CLOSED' ? 'rgba(0, 200, 83, 0.04)' : 'transparent',
+                                }
+                            }}
+                        >
+                            <CheckCircle />
+                        </IconButton>
+                    </span>
+                </Tooltip>
+            </div>
         ),
     }
 ]; 

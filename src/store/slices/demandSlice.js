@@ -31,6 +31,32 @@ export const fetchDemands = createAsyncThunk(
     }
 );
 
+export const fetchDemandsById = createAsyncThunk(
+    'demand/fetchDemandsById',
+    async (id, {rejectWithValue}) => {
+        try {
+            const response = await axiosInstance.get(`/demand/${id}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Talep yüklenirken hata oluştu');
+        }
+    }
+);
+
+export const searchDemands = createAsyncThunk(
+    'demand/searchDemands',
+    async (searchTerm, {rejectWithValue}) => {
+        try {
+            const response = await axiosInstance.get('/demand/search', {
+                params: { title: searchTerm }
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Arama yapılırken hata oluştu');
+        }
+    }
+);
+
 export const fetchAllDemandsForAdmin = createAsyncThunk(
     'demand/fetchAllDemandsForAdmin',
     async (filters, {rejectWithValue}) => {
@@ -84,8 +110,21 @@ export const createDemandAnswer = createAsyncThunk(
     }
 );
 
+export const updateDemandStatus = createAsyncThunk(
+    'demand/updateDemandStatus',
+    async ({demandId, status}, {rejectWithValue}) => {
+        try {
+            const response = await axiosInstance.put(`/demand/${demandId}/set-status`, { status });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Talep statüsü güncellenirken hata oluştu');
+        }
+    }
+);
+
 const initialState = {
     demands: [],
+    demand: {},
     statuses: [],
     selectedDemand: null,
     loading: false,
@@ -125,6 +164,18 @@ const demandSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            .addCase(fetchDemandsById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchDemandsById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.demand = action.payload;
+            })
+            .addCase(fetchDemandsById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
             // Fetch Demands
             .addCase(fetchDemands.pending, (state) => {
                 state.loading = true;
@@ -135,6 +186,19 @@ const demandSlice = createSlice({
                 state.demands = action.payload;
             })
             .addCase(fetchDemands.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            // Search Demands
+            .addCase(searchDemands.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(searchDemands.fulfilled, (state, action) => {
+                state.loading = false;
+                state.demands = action.payload;
+            })
+            .addCase(searchDemands.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
@@ -195,6 +259,22 @@ const demandSlice = createSlice({
             .addCase(createDemandAnswer.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
+            })
+            // Update Demand Status
+            .addCase(updateDemandStatus.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateDemandStatus.fulfilled, (state, action) => {
+                state.loading = false;
+                const index = state.demands.findIndex(demand => demand.id === action.payload.id);
+                if (index !== -1) {
+                    state.demands[index] = action.payload;
+                }
+            })
+            .addCase(updateDemandStatus.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     }
 });

@@ -5,7 +5,7 @@ const CustomTitle = ({ children, ...props }) => {
     <Typography
       {...props}
       sx={{
-        fontFamily: 'Urbanist',
+        fontFamily: 'Poppins',
         fontWeight: 400,
         fontSize: '22px',
         lineHeight: '28px',
